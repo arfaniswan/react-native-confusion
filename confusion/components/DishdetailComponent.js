@@ -19,7 +19,7 @@ function RenderDish(props) {
             );
         }
         else {
-            return(<View></View>);
+            return(<View>nothing to show</View>);
         }
 }
 
