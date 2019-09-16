@@ -64,6 +64,13 @@ function RenderDish(props) {
         else
             return false;
     }
+    const recognizeLeftDrag = ({ moveX, moveY, dx, dy }) => {
+        console.log('going to check left drag');
+        if ( dx > 200 )
+            return true;
+        else
+            return false;
+    }
 
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: (e, gestureState) => {
@@ -84,6 +91,8 @@ function RenderDish(props) {
                     ],
                     { cancelable: false }
                 );
+            else if (recognizeLeftDrag(gestureState))
+            props.toggleModal();
 
             return true;
         }
