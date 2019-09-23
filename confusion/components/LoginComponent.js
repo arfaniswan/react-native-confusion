@@ -7,6 +7,9 @@ import * as SecureStore from 'expo-secure-store';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as Permissions from 'expo-permissions';
+
+
+
 class LoginTab extends Component {
 
     constructor(props) {
@@ -150,6 +153,26 @@ class RegisterTab extends Component {
         }
 
     }
+   
+    
+        
+    getImageFromGallery = async () => {
+        const cameraRollPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+        if (cameraRollPermission.status === 'granted') {
+            let selectedImage = await  ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                allowsEditing: true,
+                aspect: [4, 3],
+              });
+            if (!selectedImage.cancelled) {
+                console.log(selectedImage);
+                this.processImage(selectedImage.uri);
+            }
+        }
+
+    }
+
     processImage = async (imageUri) => {
         let  processedImage = await ImageManipulator.manipulateAsync(
             imageUri, 
@@ -195,6 +218,11 @@ class RegisterTab extends Component {
                     <Button
                         title="Camera"
                         onPress={this.getImageFromCamera}
+                        />
+
+                    <Button
+                        title="Gallery"
+                        onPress={this.getImageFromGallery}
                         />
                 </View>
                 <Input
@@ -263,7 +291,7 @@ class RegisterTab extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        justifyContent: 'center',
+        justifyContent: 'space-around',
         margin: 20,
     },
     imageContainer: {

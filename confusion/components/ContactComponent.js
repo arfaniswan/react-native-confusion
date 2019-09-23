@@ -10,6 +10,8 @@ import * as MailComposer from 'expo-mail-composer';
 
 class Contact extends Component {
 
+  
+
 
   sendMail() {
     MailComposer.composeAsync({

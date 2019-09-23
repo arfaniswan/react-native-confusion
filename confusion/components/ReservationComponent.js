@@ -5,6 +5,7 @@ import * as Animatable from 'react-native-animatable';
 import {  Notifications } from 'expo';
 import * as Permissions from 'expo-permissions';
 import DatePicker from 'react-native-datepicker';
+import * as Calendar from 'expo-calendar';
 
 
 class Reservation extends Component {
@@ -19,6 +20,36 @@ class Reservation extends Component {
            
         }
     }
+
+
+    async obtainCalendarPermission(){
+        let permission = await Permissions.getAsync(Permissions.CALENDAR);
+        
+        if(permission.status !== 'granted'){
+            permission = await Permissions.askAsync(Permissions.CALENDAR);
+            
+            if(permission.status !== 'granted'){
+                Alert.alert('Permission not granted to access calendar');
+            }
+        }
+        return permission;
+    }
+    
+    async addReservationToCalendar(date){
+        await this.obtainCalendarPermission();
+        
+        console.log(new Date(Date.parse(date))+2*60*60*1000);
+        
+        Calendar.createEventAsync(Calendar.DEFAULT, {
+            title: "Con Fusion Table Reservation",
+            color: '#512DA8',
+            name: 'Your Reservation',
+            startDate: new Date(Date.parse(date)),
+            endDate: new Date(Date.parse(date)+2*60*60*1000),
+            timeZone: 'Asia/Hong_Kong',
+            location: '121, Clear Water Bay Road, Kowloon, Hong Kong'
+        });
+    } 
 
     static navigationOptions = {
         title: 'Reserve Table',
@@ -44,6 +75,7 @@ class Reservation extends Component {
               { text: "OK", 
               onPress: () => {
                 this.presentLocalNotification(this.state.date);
+                this.addReservationToCalendar(this.state.date);
                 this.resetForm();} }
             ],
             { cancelable: false }
